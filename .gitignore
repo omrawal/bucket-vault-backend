@@ -416,3 +416,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+bucket_vault/.idea/
+bucket_vault/db.sqlite3
