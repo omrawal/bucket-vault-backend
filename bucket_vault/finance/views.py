@@ -54,3 +54,17 @@ def transactions_list(request):
          'note': 'Groceries'},
     ]
     return Response(transactions)
+
+@api_view(['POST'])
+def create_new_account(request):
+    """Create a new account"""
+    print(request.data)
+    # Dummy data
+    transactions = [
+        {'id': 1, 'account': 'HDFC Savings', 'date': '2025-12-01', 'type': 'Credit', 'amount': 50000, 'note': 'Salary'},
+        {'id': 2, 'account': 'Zerodha Equity', 'date': '2025-12-02', 'type': 'Debit', 'amount': 15000,
+         'note': 'Stock Purchase'},
+        {'id': 3, 'account': 'HDFC Savings', 'date': '2025-12-03', 'type': 'Debit', 'amount': 2000,
+         'note': 'Groceries'},
+    ]
+    return Response(HTTP_201_CREATED)

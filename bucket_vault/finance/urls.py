@@ -5,4 +5,5 @@ urlpatterns = [
     path('summary/', views.summary, name='summary'),
     path('accounts/', views.accounts_list, name='accounts_list'),
     path('transactions/', views.transactions_list, name='transactions_list'),
+    path('create-account/', views.create_new_account, name='create_new_account'),
 ]
