@@ -2,7 +2,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Sum
-from .models import Account, Transaction
+from rest_framework.status import HTTP_201_CREATED
+
+from .models import Account, Portfolio, Transaction
 from .serializers import AccountSerializer, TransactionSerializer, SummarySerializer
 
 
@@ -68,3 +70,25 @@ def create_new_account(request):
          'note': 'Groceries'},
     ]
     return Response(HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def get_portfolio_list(request):
+    """List all portfolios"""
+    try:
+        portfolios = Portfolio.objects.all().values('id', 'name')
+        return Response(portfolios)
+    except Exception as e:
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def create_new_portfolio(request):
+    """Create a new portfolio"""
+    print(request.data)
+    portfolio_name = request.data.get('name',None)
+    portfolio_description = request.data.get('description',None)
+    if portfolio_name:
+        Portfolio.objects.create(name=portfolio_name, description=portfolio_description if portfolio_description else "")
+        return Response(status=status.HTTP_201_CREATED)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)

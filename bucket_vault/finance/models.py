@@ -8,6 +8,7 @@ NULLABILITY = {'null': True, 'blank': True}
 
 class Portfolio(models.Model):
     name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
     #TODO link to User model
     user = models.CharField(default="demo_user", max_length=100)  # Placeholder for User model
     created_at = models.DateTimeField(default=timezone.now)
