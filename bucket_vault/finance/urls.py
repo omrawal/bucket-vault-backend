@@ -4,7 +4,7 @@ from .portfolio_views import (
 )
 from .account_views import create_new_account, get_account_types, get_all_accounts, get_bucket_types, \
     get_account_categories
-from .transaction_views import transactions_list
+from .transaction_views import transactions_list, create_transaction
 from .dashboard_views import summary
 
 urlpatterns = [
@@ -27,4 +27,5 @@ urlpatterns = [
 
     # Transactions
     path('transactions/', transactions_list, name='transactions_list'),
+    path('create-transaction/', create_transaction, name='create_transaction'),
 ]

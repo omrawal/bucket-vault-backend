@@ -69,8 +69,8 @@ class Account(models.Model):
     """
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="accounts", **NULLABILITY)
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(AccountCategory, on_delete=models.PROTECT, related_name="accounts")
-    bucket = models.ForeignKey(Bucket, on_delete=models.PROTECT, related_name="accounts")
+    category = models.ForeignKey(AccountCategory, on_delete=models.CASCADE, related_name="accounts")
+    bucket = models.ForeignKey(Bucket, on_delete=models.CASCADE, related_name="accounts")
     balance = models.DecimalField(max_digits=12, decimal_places=2)
 
     class Meta:
