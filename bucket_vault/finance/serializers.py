@@ -1,7 +1,15 @@
 from rest_framework import serializers
-from .models import Account, Transaction
+from .models import Account, Transaction, Portfolio, AccountCategory, Bucket
+
+class PortfolioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Portfolio
+        fields = ['id', 'name', 'description', 'user', 'created_at']
 
 class AccountSerializer(serializers.ModelSerializer):
+    category = serializers.CharField(source='category.name', read_only=True)
+    bucket = serializers.CharField(source='bucket.name', read_only=True)
+    
     class Meta:
         model = Account
         fields = ['id', 'name', 'category', 'bucket', 'balance']

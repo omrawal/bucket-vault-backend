@@ -1,94 +1,28 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.db.models import Sum
-from rest_framework.status import HTTP_201_CREATED
+# This file has been refactored into separate view modules:
+# - portfolio_views.py: Portfolio management views
+# - account_views.py: Account management views
+# - transaction_views.py: Transaction views
+# - dashboard_views.py: Dashboard summary views
 
-from .models import Account, Portfolio, Transaction
-from .serializers import AccountSerializer, TransactionSerializer, SummarySerializer
+# For backwards compatibility, import all views here
+from .portfolio_views import (
+    portfolios_list,
+    get_portfolio_list,
+    create_new_portfolio,
+    delete_portfolio,
+)
+from .account_views import accounts_list, create_new_account
+from .transaction_views import transactions_list
+from .dashboard_views import summary
 
-
-@api_view(['GET'])
-def summary(request):
-    """Dashboard summary: net worth + bucket totals"""
-
-    # Dummy data - replace with real queries later
-    total_networth = 1250345.00
-    growth_total = 750000.00
-    safety_total = 500345.00
-
-    growth_pct = round((growth_total / total_networth) * 100, 1)
-    safety_pct = round((safety_total / total_networth) * 100, 1)
-
-    data = {
-        'total_networth': total_networth,
-        'growth_total': growth_total,
-        'safety_total': safety_total,
-        'growth_pct': growth_pct,
-        'safety_pct': safety_pct
-    }
-
-    serializer = SummarySerializer(data)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def accounts_list(request):
-    """List all accounts with balances"""
-    # Dummy data
-    accounts = [
-        {'id': 1, 'name': 'HDFC Savings', 'category': 'Bank', 'bucket': 'Safety', 'balance': 250000},
-        {'id': 2, 'name': 'Zerodha Equity', 'category': 'DMAT', 'bucket': 'Growth', 'balance': 400000},
-        {'id': 3, 'name': 'ICICI FD', 'category': 'Bank', 'bucket': 'Safety', 'balance': 150000},
-    ]
-    return Response(accounts)
-
-
-@api_view(['GET'])
-def transactions_list(request):
-    """Recent transactions"""
-    # Dummy data
-    transactions = [
-        {'id': 1, 'account': 'HDFC Savings', 'date': '2025-12-01', 'type': 'Credit', 'amount': 50000, 'note': 'Salary'},
-        {'id': 2, 'account': 'Zerodha Equity', 'date': '2025-12-02', 'type': 'Debit', 'amount': 15000,
-         'note': 'Stock Purchase'},
-        {'id': 3, 'account': 'HDFC Savings', 'date': '2025-12-03', 'type': 'Debit', 'amount': 2000,
-         'note': 'Groceries'},
-    ]
-    return Response(transactions)
-
-@api_view(['POST'])
-def create_new_account(request):
-    """Create a new account"""
-    print(request.data)
-    # Dummy data
-    transactions = [
-        {'id': 1, 'account': 'HDFC Savings', 'date': '2025-12-01', 'type': 'Credit', 'amount': 50000, 'note': 'Salary'},
-        {'id': 2, 'account': 'Zerodha Equity', 'date': '2025-12-02', 'type': 'Debit', 'amount': 15000,
-         'note': 'Stock Purchase'},
-        {'id': 3, 'account': 'HDFC Savings', 'date': '2025-12-03', 'type': 'Debit', 'amount': 2000,
-         'note': 'Groceries'},
-    ]
-    return Response(HTTP_201_CREATED)
-
-
-@api_view(['GET'])
-def get_portfolio_list(request):
-    """List all portfolios"""
-    try:
-        portfolios = Portfolio.objects.all().values('id', 'name')
-        return Response(portfolios)
-    except Exception as e:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@api_view(['POST'])
-def create_new_portfolio(request):
-    """Create a new portfolio"""
-    print(request.data)
-    portfolio_name = request.data.get('name',None)
-    portfolio_description = request.data.get('description',None)
-    if portfolio_name:
-        Portfolio.objects.create(name=portfolio_name, description=portfolio_description if portfolio_description else "")
-        return Response(status=status.HTTP_201_CREATED)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+__all__ = [
+    'portfolios_list',
+    'get_portfolio_list',
+    'create_new_portfolio',
+    'delete_portfolio',
+    'accounts_list',
+    'create_new_account',
+    'transactions_list',
+    'summary',
+]
+    

@@ -1,11 +1,30 @@
 from django.urls import path
-from . import views
+from .portfolio_views import (
+    portfolios_list, get_portfolio_list, create_new_portfolio, delete_portfolio
+)
+from .account_views import create_new_account, get_account_types, get_all_accounts, get_bucket_types, \
+    get_account_categories
+from .transaction_views import transactions_list
+from .dashboard_views import summary
 
 urlpatterns = [
-    path('summary/', views.summary, name='summary'),
-    path('accounts/', views.accounts_list, name='accounts_list'),
-    path('transactions/', views.transactions_list, name='transactions_list'),
-    path('create-account/', views.create_new_account, name='create_new_account'),
-    path('get-portfolio-list/', views.get_portfolio_list, name='get_portfolio_list'),
-    path('create-portfolio/', views.create_new_portfolio, name='create_new_portfolio'),
+    # Dashboard
+    path('summary/', summary, name='summary'),
+    
+    # Portfolios
+    path('portfolios/', portfolios_list, name='portfolios_list'),
+    path('get-portfolio-list/', get_portfolio_list, name='get_portfolio_list'),
+    path('create-portfolio/', create_new_portfolio, name='create_new_portfolio'),
+    path('delete-portfolio/<int:portfolio_id>/', delete_portfolio, name='delete_portfolio'),
+    
+    # Accounts
+    path('get-all-accounts/', get_all_accounts, name='get_all_accounts'),
+    path('create-account/', create_new_account, name='create_new_account'),
+    path('get-account-types/', get_account_types, name='get_account_types'),
+    path('get-bucket-types/', get_bucket_types, name='get_bucket_types'),
+    path('get-account-categories/', get_account_categories, name='get_account_categories'),
+
+
+    # Transactions
+    path('transactions/', transactions_list, name='transactions_list'),
 ]
