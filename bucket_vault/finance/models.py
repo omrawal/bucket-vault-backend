@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -104,6 +106,7 @@ class TransactionCategory(models.Model):
     """
     Main transaction categories: Income, Expense, Transfer, Investment.
     """
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="transaction_categories", **NULLABILITY)
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)
 
@@ -119,6 +122,7 @@ class TransactionSubcategory(models.Model):
     Subcategories linked to main categories.
     E.g., Income: Salary, Stock Profit; Expense: Household, Travel
     """
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="transaction_subcategories", **NULLABILITY)
     category = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE, related_name="subcategories")
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
@@ -210,11 +214,16 @@ def create_default_transaction_categories(sender, instance, created, **kwargs):
             "Investment": ["Stock Purchase", "MF Investment", "SGB Purchase"]
         }
         for category_name, subcategories in default_categories.items():
-            category, _ = TransactionCategory.objects.get_or_create(name=category_name)
+            category, _ = TransactionCategory.objects.get_or_create(
+                portfolio=instance,
+                name=category_name,
+                defaults={"description": ""},)
             for subcategory_name in subcategories:
                 TransactionSubcategory.objects.get_or_create(
+                    portfolio=instance,
                     category=category,
-                    name=subcategory_name
+                    name=subcategory_name,
+                    defaults={"description": ""},
                 )
 
 
@@ -226,9 +235,9 @@ def update_account_balance_on_transaction(sender, instance, created, **kwargs):
     if created:
         account = instance.account
         if instance.type == "Credit":
-            account.balance += instance.amount
+            account.balance += Decimal(instance.amount)
         elif instance.type == "Debit":
-            account.balance -= instance.amount
+            account.balance -= Decimal(instance.amount)
         account.save(update_fields=['balance'])
 
 

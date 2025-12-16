@@ -15,6 +15,8 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'category', 'bucket', 'balance']
 
 class TransactionSerializer(serializers.ModelSerializer):
+    account = serializers.CharField(source='account.name', read_only=True)
+    type = serializers.CharField(source='transaction.transaction_type', read_only=True)
     class Meta:
         model = Transaction
         fields = ['id', 'account', 'date', 'type', 'amount', 'note']
