@@ -140,8 +140,8 @@ class Transaction(models.Model):
     date = models.DateField()
     type = models.CharField(max_length=10)  # "Credit", "Debit"
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    category = models.ForeignKey(TransactionCategory, on_delete=models.PROTECT, related_name="transactions")
-    subcategory = models.ForeignKey(TransactionSubcategory, on_delete=models.PROTECT, related_name="transactions")
+    category = models.ForeignKey(TransactionCategory, on_delete=models.CASCADE, related_name="transactions")
+    subcategory = models.ForeignKey(TransactionSubcategory, on_delete=models.CASCADE, related_name="transactions")
     note = models.CharField(max_length=200, blank=True)
 
     class Meta:
