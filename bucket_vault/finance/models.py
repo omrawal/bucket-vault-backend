@@ -107,14 +107,15 @@ class TransactionCategory(models.Model):
     Main transaction categories: Income, Expense, Transfer, Investment.
     """
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="transaction_categories", **NULLABILITY)
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = "Transaction Categories"
+        unique_together = ("portfolio", "name")
 
     def __str__(self):
-        return self.name
+        return f"{self.portfolio.name} - {self.name}"
 
 
 class TransactionSubcategory(models.Model):
@@ -128,12 +129,11 @@ class TransactionSubcategory(models.Model):
     description = models.TextField(blank=True)
 
     class Meta:
-        unique_together = ("category", "name")
+        unique_together = ("portfolio", "category", "name")
         verbose_name_plural = "Transaction Subcategories"
 
     def __str__(self):
-        return f"{self.category.name} - {self.name}"
-
+        return f"{self.portfolio.name} - {self.category.name} - {self.name}"
 
 class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="transactions")
