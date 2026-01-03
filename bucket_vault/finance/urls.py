@@ -1,23 +1,29 @@
 from django.urls import path
+from . import auth_views
+from .dashboard_views import get_total_networth
 from .portfolio_views import (
-    get_total_networth, portfolios_list, get_portfolio_list, create_new_portfolio, delete_portfolio
+    portfolios_list, get_portfolio_list, create_new_portfolio, delete_portfolio
 )
 from .account_views import create_new_account, get_account_types, get_all_accounts, get_bucket_types, \
     get_account_categories
 from .transaction_views import transactions_list, create_transaction, get_transaction_types, get_transaction_categories, \
     get_transaction_subcategories
-from .dashboard_views import summary
 
 urlpatterns = [
+    # Auth endpoints
+    path('auth/signup/', auth_views.signup, name='signup'),
+    path('auth/verify/', auth_views.verify_token, name='verify_token'),
+    path('auth/logout/', auth_views.logout, name='logout'),
+    
     # Dashboard
-    path('summary/', summary, name='summary'),
+    # path('summary/', summary, name='summary'),
+    path('get-total-networth/', get_total_networth, name='get_total_networth'),
     
     # Portfolios
     path('portfolios/', portfolios_list, name='portfolios_list'),
     path('get-portfolio-list/', get_portfolio_list, name='get_portfolio_list'),
     path('create-portfolio/', create_new_portfolio, name='create_new_portfolio'),
     path('delete-portfolio/<int:portfolio_id>/', delete_portfolio, name='delete_portfolio'),
-    path('get-total-networth/', get_total_networth, name='get_total_networth'),
     
     # Accounts
     path('get-all-accounts/', get_all_accounts, name='get_all_accounts'),
