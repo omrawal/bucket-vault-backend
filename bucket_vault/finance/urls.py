@@ -1,6 +1,6 @@
 from django.urls import path
 from .portfolio_views import (
-    portfolios_list, get_portfolio_list, create_new_portfolio, delete_portfolio
+    get_total_networth, portfolios_list, get_portfolio_list, create_new_portfolio, delete_portfolio
 )
 from .account_views import create_new_account, get_account_types, get_all_accounts, get_bucket_types, \
     get_account_categories
@@ -17,6 +17,7 @@ urlpatterns = [
     path('get-portfolio-list/', get_portfolio_list, name='get_portfolio_list'),
     path('create-portfolio/', create_new_portfolio, name='create_new_portfolio'),
     path('delete-portfolio/<int:portfolio_id>/', delete_portfolio, name='delete_portfolio'),
+    path('get-total-networth/', get_total_networth, name='get_total_networth'),
     
     # Accounts
     path('get-all-accounts/', get_all_accounts, name='get_all_accounts'),
