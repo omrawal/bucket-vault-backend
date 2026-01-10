@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from .utils.portfolio_helper import calculate_total_networth
+from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, \
+    HTTP_500_INTERNAL_SERVER_ERROR, HTTP_204_NO_CONTENT
 
 from .models import Portfolio
 from .serializers import PortfolioSerializer
@@ -22,7 +22,7 @@ def get_portfolio_list(request):
         portfolios = Portfolio.objects.all().values('id', 'name')
         return Response(portfolios)
     except Exception as e:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
@@ -36,9 +36,9 @@ def create_new_portfolio(request):
             name=portfolio_name,
             description=portfolio_description if portfolio_description else ""
         )
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=HTTP_201_CREATED)
     else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])
@@ -47,23 +47,9 @@ def delete_portfolio(request, portfolio_id):
     try:
         portfolio = Portfolio.objects.get(id=portfolio_id)
         portfolio.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=HTTP_204_NO_CONTENT)
     except Portfolio.DoesNotExist:
-        return Response({'error': 'Portfolio not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Portfolio not found'}, status=HTTP_404_NOT_FOUND)
     except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'error': str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['GET'])
-def get_total_networth(request):
-    """Get total networth across all portfolios"""
-    try:
-        total_networth = 0
-        portfolio_id = request.query_params.get('portfolio_id', None)
-        if portfolio_id:
-            portfolio = Portfolio.objects.get(id=portfolio_id)
-            total_networth = calculate_total_networth(portfolio)
-            return Response(total_networth)
-        else:
-            return Response({'error': 'Portfolio ID not provided'}, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

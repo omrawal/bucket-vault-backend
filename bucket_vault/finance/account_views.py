@@ -1,4 +1,5 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 
@@ -7,6 +8,7 @@ from finance.serializers import AccountSerializer
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_accounts(request):
     """List all accounts with balances"""
     
