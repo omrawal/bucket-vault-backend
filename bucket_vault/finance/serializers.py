@@ -16,10 +16,11 @@ class AccountSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
     account = serializers.CharField(source='account.name', read_only=True)
-    type = serializers.CharField(source='transaction.transaction_type', read_only=True)
+    # type = serializers.CharField(source='transaction.type', read_only=True)
+    category = serializers.CharField(source='category.name', read_only=True)
     class Meta:
         model = Transaction
-        fields = ['id', 'account', 'date', 'type', 'amount', 'note']
+        fields = ['id', 'account', 'date','category', 'type', 'amount', 'note']
 
 class SummarySerializer(serializers.Serializer):
     total_networth = serializers.DecimalField(max_digits=12, decimal_places=2)
