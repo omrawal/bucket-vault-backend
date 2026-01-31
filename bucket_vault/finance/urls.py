@@ -17,7 +17,7 @@ from .account_views import (
 from .transaction_views import (
     transactions_list,
     create_transaction,
-    get_transaction_categories,
+    get_transaction_categories, create_transfer,
 )
 from .statistics_views import (
     get_account_balances,
@@ -54,6 +54,7 @@ urlpatterns = [
     # Transactions
     path('get-all-transactions/', transactions_list, name='get-all-transactions'),
     path('create-transaction/', create_transaction, name='create_transaction'),
+    path('create-transfer/', create_transfer, name='create_transfer'),
     path('get-transaction-categories/', get_transaction_categories, name='get_transaction_categories'),
 
     # Statistics
