@@ -86,18 +86,12 @@ class BalanceSnapshot(models.Model):
 class TransactionCategory(models.Model):
     """
     Transaction categories: Salary, Bonus, Food, Transport, etc.
-    Each category belongs to a type: Income, Expense, or Transfer
     """
-    CATEGORY_TYPES = [
-        ('Income', 'Income'),
-        ('Expense', 'Expense'),
-        ('Transfer', 'Transfer'),
-    ]
-
+    
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="transaction_categories",
                                   **NULLABILITY)
     name = models.CharField(max_length=50)
-    type = models.CharField(max_length=10, choices=CATEGORY_TYPES)  # Income, Expense, Transfer
+    type = models.CharField(max_length=10)
     description = models.TextField(blank=True)
     is_default = models.BooleanField(default=False)  # Track if it's a system default category
 

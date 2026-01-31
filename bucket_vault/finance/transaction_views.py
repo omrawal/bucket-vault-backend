@@ -29,25 +29,37 @@ def create_transaction(request):
         account_id = request.data.get('account_id')
         date = request.data.get('date')
         transaction_type = request.data.get('type')  # 'Credit' or 'Debit'
-        category_id = request.data.get('category')
+        category_name = request.data.get('category',None)
         amount = request.data.get('amount')
         note = request.data.get('note', '')
 
         # Validate account belongs to portfolio
         account = Account.objects.get(id=account_id, portfolio_id=portfolio_id)
-        category = TransactionCategory.objects.get(id=category_id, portfolio_id=portfolio_id)
-
-        # Validate category type matches transaction type
-        if transaction_type == 'Credit' and category.type != 'Income':
+        # Get or create transaction category
+        if category_name:
+            # Determine category type based on transaction type
+            if transaction_type == 'Credit':
+                category_type = 'Income'
+            elif transaction_type == 'Debit':
+                category_type = 'Expense'
+            else:
+                return Response(
+                    {'error': 'Invalid transaction type'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            category, created = TransactionCategory.objects.get_or_create(
+                portfolio_id=portfolio_id,
+                name=category_name,
+                type=category_type,
+                defaults={'is_default': False}
+            )
+        else:
             return Response(
-                {'error': 'Credit transactions must use Income categories'},
+                {'error': 'Category is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        elif transaction_type == 'Debit' and category.type not in ['Expense', 'Transfer']:
-            return Response(
-                {'error': 'Debit transactions must use Expense or Transfer categories'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        
 
         transaction = Transaction.objects.create(
             account=account,
