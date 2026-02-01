@@ -76,10 +76,10 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOWED_ORIGINS = [
     url.strip() for url in os.getenv(
         'CORS_ALLOWED_ORIGINS',
-        'http://localhost:5173,http://localhost:3000'
+        'http://localhost:5173,http://localhost:3000,https://bucket-vault-frontend.vercel.app,',
     ).split(',')
 ]
-
+print("CORS_ALLOWED_ORIGINS:", CORS_ALLOWED_ORIGINS)
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
